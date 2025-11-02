@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+  adminer:
+    network_mode: service:postgres
+    image: adminer
+    volumes:
+      - ./login.php:/var/www/html/plugins-enabled/login.php
+    depends_on:
+      - postgres
+  workspace:
+    network_mode: service:postgres
+    build: .
+    volumes:
+      - ..:/workspace:cached
+    command: ["sleep", "infinity"]
+    env_file:
+      - common.env
+    depends_on:
+      - postgres
+      - adminer

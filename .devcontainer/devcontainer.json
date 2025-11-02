@@ -1,0 +1,17 @@
+{
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.Go",
+        "a-h.templ",
+        "be5invis.toml"
+      ]
+    }
+  },
+  "postStartCommand": "make dev"
+}

@@ -1,0 +1,77 @@
+package main
+
+import "fmt"
+
+templ Layout() {
+	<html>
+		<head>
+			<meta name="viewport" content="width=device-width"/>
+		</head>
+		<body>
+			{ children... }
+		</body>
+	</html>
+}
+
+templ ProductList(products []Product) {
+	@Layout() {
+		<h1>Products</h1>
+		<a href="/add">Add</a>
+		<table border="1">
+			<tr>
+				<td>Name</td>
+				<td>Action</td>
+			</tr>
+			for _, product := range products {
+				<tr>
+					<td>{ product.Name }</td>
+					<td>
+						<a href={ fmt.Sprintf("/%d/edit", product.ID) }>Edit</a>
+						<a href={ fmt.Sprintf("/%d/remove", product.ID) }>Remove</a>
+					</td>
+				</tr>
+			}
+		</table>
+	}
+}
+
+templ ProductForm(product Product) {
+	{{ isAdd := product.ID == 0 }}
+	@Layout() {
+		<h1>
+			if isAdd {
+				Add
+			} else {
+				Edit
+			}
+			Product
+		</h1>
+		{{
+			var class string
+			if isAdd {
+				class = "foo"
+			} else {
+				class = "bar"
+			}
+		}}
+		<form class={ class } method="post">
+			<label>
+				Name:
+				<input name="name" value={ product.Name } required autofocus/>
+			</label>
+			<button>Save</button>
+		</form>
+	}
+}
+
+templ ProductConfirm() {
+	@Layout() {
+		<h1>
+			Remove Product
+		</h1>
+		<form method="post">
+			Are you sure?
+			<button>Yes</button>
+		</form>
+	}
+}
