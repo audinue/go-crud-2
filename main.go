@@ -16,14 +16,11 @@ type Product struct {
 
 func main() {
 	db, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
-	log.Printf("%+v\n", db.Config())
-
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	app := fiber.New(fiber.Config{})
-	log.Printf("%+v\n", app.Config())
+	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		rows, err := db.Query(c.Context(), "SELECT * FROM products")
