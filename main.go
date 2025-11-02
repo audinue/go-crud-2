@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"os"
 
@@ -64,7 +65,7 @@ func main() {
 	})
 
 	app.Post("/:id/edit", func(c *fiber.Ctx) error {
-		_, err := db.Exec(
+		result, err := db.Exec(
 			c.Context(),
 			"UPDATE products SET name = $1 WHERE id = $2",
 			c.FormValue("name"),
@@ -72,6 +73,9 @@ func main() {
 		)
 		if err != nil {
 			return err
+		}
+		if result.RowsAffected() != 1 {
+			return errors.New("not found")
 		}
 		return c.Redirect("/")
 	})
@@ -87,13 +91,16 @@ func main() {
 	})
 
 	app.Post("/:id/remove", func(c *fiber.Ctx) error {
-		_, err := db.Exec(
+		result, err := db.Exec(
 			c.Context(),
 			"DELETE FROM products WHERE id = $1",
 			c.Params("id"),
 		)
 		if err != nil {
 			return err
+		}
+		if result.RowsAffected() != 1 {
+			return errors.New("not found")
 		}
 		return c.Redirect("/")
 	})
