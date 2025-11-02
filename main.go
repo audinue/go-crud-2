@@ -30,7 +30,10 @@ func main() {
 		products := []Product{}
 		for rows.Next() {
 			product := Product{}
-			rows.Scan(&product.ID, &product.Name)
+			err := rows.Scan(&product.ID, &product.Name)
+			if err != nil {
+				return err
+			}
 			products = append(products, product)
 		}
 		c.Set("Content-Type", "text/html")
